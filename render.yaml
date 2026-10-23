@@ -1,0 +1,19 @@
+services:
+  - type: web
+    name: zerodha-backend
+    runtime: node
+    rootDir: backend
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: MONGO_URL
+        sync: false
+      - key: TOKEN_KEY
+        generateValue: true
+      - key: FRONTEND_URL
+        sync: false
+      - key: DASHBOARD_URL
+        sync: false
