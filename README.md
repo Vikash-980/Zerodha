@@ -1,4 +1,4 @@
-# Zerodha app
+# Zerodha
 
 This repository contains three separately deployable applications:
 
