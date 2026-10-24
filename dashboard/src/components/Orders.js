@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import api from "../api";
 import { formatNumber } from "../utils/formatNumber";
+import getArrayResponse from "../utils/getArrayResponse";
 
 const Orders = () => {
 
@@ -11,10 +12,7 @@ const Orders = () => {
   useEffect(() => {
     api.get("/allOrders")
       .then((res) => {
-        if (!Array.isArray(res.data)) {
-          throw new Error("The orders API returned an invalid response");
-        }
-        setAllOrders(res.data);
+        setAllOrders(getArrayResponse(res, "orders"));
       })
       .catch((err) => {
         console.error("Error fetching orders:", err);
@@ -22,10 +20,12 @@ const Orders = () => {
       });
   }, []);
 
+  const orders = Array.isArray(allOrders) ? allOrders : [];
+
   return (
     <div className="orders">
 
-      {allOrders.length === 0 ? (
+      {orders.length === 0 ? (
         <div className="no-orders">
           <p>{error || "You haven't placed any orders today"}</p>
 
@@ -35,7 +35,7 @@ const Orders = () => {
         </div>
       ) : (
         <div className="order-table">
-          <h3 className="title">Orders ({allOrders.length})</h3>
+          <h3 className="title">Orders ({orders.length})</h3>
 
           <table>
             <thead>
@@ -48,7 +48,7 @@ const Orders = () => {
             </thead>
 
             <tbody>
-              {allOrders.map((order, index) => (
+              {orders.map((order, index) => (
                 <tr key={index}>
                   <td>{order.name}</td>
                   <td>{order.qty}</td>

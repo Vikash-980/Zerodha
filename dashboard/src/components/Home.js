@@ -6,12 +6,12 @@ import ErrorBoundary from "./ErrorBoundary";
 
 const Home = () => {
   return (
-    <>
-      <TopBar />
-      <ErrorBoundary>
+    <ErrorBoundary>
+      <>
+        <TopBar />
         <Dashboard />
-      </ErrorBoundary>
-    </>
+      </>
+    </ErrorBoundary>
   );
 };
 

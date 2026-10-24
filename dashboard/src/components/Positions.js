@@ -2,6 +2,7 @@ import React from "react";
 import { useEffect, useState } from "react";
 import api from "../api";
 import { formatNumber, toFiniteNumber } from "../utils/formatNumber";
+import getArrayResponse from "../utils/getArrayResponse";
 
 const Positions = () => {
   const [allPositions,setAllPositions] = useState([]);
@@ -9,18 +10,17 @@ const Positions = () => {
 
 useEffect(()=>{
   api.get("/allPositions").then((res)=>{
-    if (!Array.isArray(res.data)) {
-      throw new Error("The positions API returned an invalid response");
-    }
-    setAllPositions(res.data);
+    setAllPositions(getArrayResponse(res, "positions"));
   }).catch((requestError) => {
     console.error("Unable to fetch positions:", requestError);
     setError("Unable to load positions. Please try again later.");
   });
 },[])
+  const positions = Array.isArray(allPositions) ? allPositions : [];
+
   return (
     <>
-      <h3 className="title">Positions ({allPositions.length})</h3>
+      <h3 className="title">Positions ({positions.length})</h3>
       {error && <p role="alert">{error}</p>}
 
       <div className="order-table">
@@ -37,7 +37,7 @@ useEffect(()=>{
             </tr>
           </thead>
           <tbody>
-            {allPositions.map((stock, index) => {
+            {positions.map((stock, index) => {
               const qty = toFiniteNumber(stock.qty) ?? 0;
               const avg = toFiniteNumber(stock.avg) ?? 0;
               const price = toFiniteNumber(stock.price) ?? 0;

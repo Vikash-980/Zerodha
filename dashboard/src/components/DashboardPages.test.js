@@ -72,3 +72,20 @@ test("menu navigation switches between data pages without a blank screen", async
     expect(api.get).toHaveBeenCalledWith("/allOrders");
   });
 });
+
+test.each([
+  ["/holdings", "/allHoldings", "Holdings (0)"],
+  ["/positions", "/allPositions", "Positions (0)"],
+  ["/orders", "/allOrders", "Unable to load orders. Please try again later."],
+])("does not crash when %s receives a non-array API response", async (route, endpoint, message) => {
+  api.get.mockImplementationOnce(() => Promise.resolve({ data: { message: "Unauthorized" } }));
+
+  render(
+    <MemoryRouter initialEntries={[route]} future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+      <Home />
+    </MemoryRouter>
+  );
+
+  expect(await screen.findByText(message)).toBeInTheDocument();
+  expect(api.get).toHaveBeenCalledWith(endpoint);
+});

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { VerticalGraph } from "./VerticalGraph";
 import api from "../api";
 import { formatNumber, toFiniteNumber } from "../utils/formatNumber";
+import getArrayResponse from "../utils/getArrayResponse";
 
 // import { holdings } from "../data/data";
 
@@ -11,26 +12,24 @@ const Holdings = () => {
 
   useEffect(() => {
     api.get("/allHoldings").then((res) => {
-      // console.log(res.data);
-      if (!Array.isArray(res.data)) {
-        throw new Error("The holdings API returned an invalid response");
-      }
-      setAllHoldings(res.data);
+      setAllHoldings(getArrayResponse(res, "holdings"));
     }).catch((requestError) => {
       console.error("Unable to fetch holdings:", requestError);
       setError("Unable to load holdings. Please try again later.");
     });
   }, []);
 
+  const holdings = Array.isArray(allHoldings) ? allHoldings : [];
+
   // const labels = ['January', 'February', 'March', 'April', 'May', 'June', 'July'];
-  const labels = allHoldings.map((subArray) => subArray["name"]);
+  const labels = holdings.map((subArray) => subArray["name"]);
 
   const data = {
     labels,
     datasets: [
       {
         label: "Stock Price",
-        data: allHoldings.map((stock) => stock.price),
+        data: holdings.map((stock) => stock.price),
         backgroundColor: "rgba(255, 99, 132, 0.5)",
       },
     ],
@@ -54,7 +53,7 @@ const Holdings = () => {
 
   return (
     <>
-      <h3 className="title">Holdings ({allHoldings.length})</h3>
+      <h3 className="title">Holdings ({holdings.length})</h3>
       {error && <p role="alert">{error}</p>}
 
       <div className="order-table">
@@ -72,7 +71,7 @@ const Holdings = () => {
             </tr>
           </thead>
           <tbody>
-            {allHoldings.map((stock, index) => {
+            {holdings.map((stock, index) => {
               const qty = toFiniteNumber(stock.qty) ?? 0;
               const avg = toFiniteNumber(stock.avg) ?? 0;
               const price = toFiniteNumber(stock.price) ?? 0;
