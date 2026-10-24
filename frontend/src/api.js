@@ -2,7 +2,7 @@ import axios from "axios";
 
 const apiBaseURL =
   process.env.REACT_APP_API_URL ||
-  (process.env.NODE_ENV === "production" ? "" : "http://localhost:3002");
+  "https://zerodha-0zlh.onrender.com"; // <-- Yahan Render ka live backend URL daal diya
 
 const api = axios.create({
   baseURL: apiBaseURL,
