@@ -37,7 +37,17 @@ app.use(
       const isLocalDevelopmentOrigin =
         process.env.NODE_ENV !== "production" &&
         /^http:\/\/(localhost|127\.0\.0\.1):\d+$/.test(origin || "");
-      callback(null, !origin || allowedOrigins.includes(origin) || isLocalDevelopmentOrigin);
+      const isVercelAppDeployment =
+        /^https:\/\/zerodha(?:-dash)?-[a-z0-9]+-vikash-980s-projects\.vercel\.app$/.test(
+          origin || ""
+        );
+      callback(
+        null,
+        !origin ||
+          allowedOrigins.includes(origin) ||
+          isLocalDevelopmentOrigin ||
+          isVercelAppDeployment
+      );
     },
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
