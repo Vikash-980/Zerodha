@@ -2,12 +2,15 @@ import React from "react";
 
 import Dashboard from "./Dashboard";
 import TopBar from "./TopBar";
+import ErrorBoundary from "./ErrorBoundary";
 
 const Home = () => {
   return (
     <>
       <TopBar />
-      <Dashboard />
+      <ErrorBoundary>
+        <Dashboard />
+      </ErrorBoundary>
     </>
   );
 };

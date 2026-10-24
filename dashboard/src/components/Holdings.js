@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { VerticalGraph } from "./VerticalGraph";
 import api from "../api";
+import { formatNumber, toFiniteNumber } from "../utils/formatNumber";
 
 // import { holdings } from "../data/data";
 
@@ -11,6 +12,9 @@ const Holdings = () => {
   useEffect(() => {
     api.get("/allHoldings").then((res) => {
       // console.log(res.data);
+      if (!Array.isArray(res.data)) {
+        throw new Error("The holdings API returned an invalid response");
+      }
       setAllHoldings(res.data);
     }).catch((requestError) => {
       console.error("Unable to fetch holdings:", requestError);
@@ -69,20 +73,24 @@ const Holdings = () => {
           </thead>
           <tbody>
             {allHoldings.map((stock, index) => {
-              const curValue = stock.price * stock.qty;
-              const isProfit = curValue - stock.avg * stock.qty >= 0.0;
+              const qty = toFiniteNumber(stock.qty) ?? 0;
+              const avg = toFiniteNumber(stock.avg) ?? 0;
+              const price = toFiniteNumber(stock.price) ?? 0;
+              const curValue = price * qty;
+              const profitLoss = curValue - avg * qty;
+              const isProfit = profitLoss >= 0;
               const profClass = isProfit ? "profit" : "loss";
               const dayClass = stock.isLoss ? "loss" : "profit";
 
               return (
                 <tr key={index}>
                   <td>{stock.name}</td>
-                  <td>{stock.qty}</td>
-                  <td>{stock.avg.toFixed(2)}</td>
-                  <td>{stock.price.toFixed(2)}</td>
-                  <td>{curValue.toFixed(2)}</td>
+                  <td>{formatNumber(stock.qty)}</td>
+                  <td>{formatNumber(stock.avg)}</td>
+                  <td>{formatNumber(stock.price)}</td>
+                  <td>{formatNumber(curValue)}</td>
                   <td className={profClass}>
-                    {(curValue - stock.avg * stock.qty).toFixed(2)}
+                    {formatNumber(profitLoss)}
                   </td>
                   <td className={profClass}>{stock.net}</td>
                   <td className={dayClass}>{stock.day}</td>

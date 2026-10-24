@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import api from "../api";
+import { formatNumber } from "../utils/formatNumber";
 
 const Orders = () => {
 
@@ -10,6 +11,9 @@ const Orders = () => {
   useEffect(() => {
     api.get("/allOrders")
       .then((res) => {
+        if (!Array.isArray(res.data)) {
+          throw new Error("The orders API returned an invalid response");
+        }
         setAllOrders(res.data);
       })
       .catch((err) => {
@@ -48,7 +52,7 @@ const Orders = () => {
                 <tr key={index}>
                   <td>{order.name}</td>
                   <td>{order.qty}</td>
-                  <td>{Number(order.price).toFixed(2)}</td>
+                  <td>{formatNumber(order.price)}</td>
                   <td>{order.mode}</td>
                 </tr>
               ))}
