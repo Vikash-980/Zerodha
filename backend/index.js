@@ -14,6 +14,8 @@ const app = express();
 app.disable("etag");
 const isProduction = process.env.NODE_ENV === "production";
 const allowedOrigins = [
+  "https://zerodha.vercel.app",
+  "https://zerodha-dash.vercel.app",
   process.env.FRONTEND_URL,
   process.env.DASHBOARD_URL,
   ...(process.env.ALLOWED_ORIGINS || "").split(","),

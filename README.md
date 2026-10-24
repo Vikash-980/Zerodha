@@ -49,11 +49,11 @@ setting it:
 - `REACT_APP_API_URL`: the deployed Render API origin, without a trailing
   slash, e.g. `https://your-backend.onrender.com`
 
-Also set this variable in the frontend Vercel project:
+After a successful login, the frontend redirects to the deployed dashboard at
+`https://zerodha-dash-c39sdkkw4-vikash-980s-projects.vercel.app/`.
 
-- `REACT_APP_DASHBOARD_URL`: the deployed dashboard origin, e.g.
-  `https://your-dashboard.vercel.app`
-
-After deployment, update Render's `FRONTEND_URL` and `DASHBOARD_URL` to the
-exact Vercel origins. If custom domains are added, update these values to the
-custom origins as well. The API uses secure cross-site cookies in production.
+The API allows the stable Vercel origins `https://zerodha.vercel.app` and
+`https://zerodha-dash.vercel.app` by default, as well as the configured
+`FRONTEND_URL` and `DASHBOARD_URL` origins. Set those Render values to the
+exact deployed origins, especially when using preview deployments or custom
+domains. The API uses secure cross-site cookies in production.

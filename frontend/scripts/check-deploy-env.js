@@ -1,4 +1,4 @@
-const requiredVariables = ["REACT_APP_API_URL", "REACT_APP_DASHBOARD_URL"];
+const requiredVariables = ["REACT_APP_API_URL"];
 
 if (process.env.VERCEL === "1") {
   const missingVariables = requiredVariables.filter(

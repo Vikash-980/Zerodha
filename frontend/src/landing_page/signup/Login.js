@@ -3,6 +3,9 @@ import { Link } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import api from "../../api";
 
+const dashboardUrl =
+  "https://zerodha-dash-c39sdkkw4-vikash-980s-projects.vercel.app/";
+
 const Login = () => {
   const [inputValue, setInputValue] = useState({
     email: "",
@@ -32,13 +35,6 @@ const Login = () => {
       const { data } = await api.post("/login", inputValue);
       const { success, message } = data;
       if (success) {
-        const dashboardUrl =
-          process.env.REACT_APP_DASHBOARD_URL ||
-          (process.env.NODE_ENV === "production" ? "" : "http://localhost:3001/");
-        if (!dashboardUrl) {
-          handleError("Dashboard URL is not configured. Please contact support.");
-          return;
-        }
         handleSuccess(message);
         setTimeout(() => {
           window.location.href = dashboardUrl;
